@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     #region Moveinfo
     [Header("Move info")]
     public float MoveSpeed = 8f;
-    public float JumpForce = 12f;
+    public float JumpForce = 18f;
 
     [Header("Dash info")]
     [SerializeField] private float DashCoolDown = 0.4f;
@@ -25,6 +25,11 @@ public class Player : MonoBehaviour
     [SerializeField] private LayerMask whatisground;
     #endregion
 
+    [Header("Attack info")]
+    public Vector2[] attackmovement;
+
+
+    public bool isBusy { get; private set; }
     public int FacingDir { get; private set; } = 1;
     private bool FacingRight = true;   
 
@@ -41,7 +46,10 @@ public class Player : MonoBehaviour
     public PlayerAirState airState { get; private set; }
     public PlayerJumpState jumpState { get; private set; }
     public PlayerDashState dashState { get; private set; }
+    public PlayerWallSlideState WallSlideState { get; private set; }
+    public PlayerWallJumpState walljumpState { get; private set; }
 
+    public PlayerPrimartAttackState primaryattackState { get; private set; }
     #endregion
 
     private void Awake()
@@ -53,6 +61,9 @@ public class Player : MonoBehaviour
         jumpState = new PlayerJumpState(this, "Jump", stateMachine);
         airState  = new PlayerAirState(this, "Jump", stateMachine);
         dashState = new PlayerDashState(this, "Dash", stateMachine);
+        WallSlideState = new PlayerWallSlideState(this, "WallSilde", stateMachine);
+        walljumpState = new PlayerWallJumpState(this, "Jump", stateMachine);
+        primaryattackState = new PlayerPrimartAttackState(this, "Attack", stateMachine);
     }
 
     void Start()
@@ -88,7 +99,17 @@ public class Player : MonoBehaviour
         FlipControl(velocity_x);
     }
 
+    public IEnumerator BusyFor(float second)
+    {
+        isBusy = true;
+        yield return new WaitForSeconds(second);
+        isBusy = false;
+    }
+
     public bool IsGroundDectected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatisground);
+    public bool IsWallDectected() => Physics2D.Raycast(wallCheck.position, Vector2.right * FacingDir , wallCheckDistance, whatisground);
+
+    public void AnimationTrigger() => stateMachine.currentState.AnimationFinishTrigger();
 
     public void Flip()
     {

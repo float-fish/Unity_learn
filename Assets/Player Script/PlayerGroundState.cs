@@ -23,7 +23,11 @@ public class PlayerGroundState : PlayerState
         base.Update();
         if (!player.IsGroundDectected())
             stateMachine.ChangeState(player.airState);
-        else if (Input.GetKeyDown(KeyCode.K)&& player.IsGroundDectected()) 
+        else if (Input.GetKeyDown(KeyCode.K) && player.IsGroundDectected())
             stateMachine.ChangeState(player.jumpState);
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            stateMachine.ChangeState(player.primaryattackState);
+        }
     }
 }
