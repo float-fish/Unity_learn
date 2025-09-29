@@ -8,6 +8,8 @@ public class PlayerPrimartAttackState : PlayerState
 
     private float lastTimeAttacked = 0f;
     private float comboWindow = 0.5f;
+
+    private int AttackDir;
     public PlayerPrimartAttackState(Player player, string animBoolName, PlayStateMachine stateMachine) : base(player, animBoolName, stateMachine)
     {
     }
@@ -18,8 +20,15 @@ public class PlayerPrimartAttackState : PlayerState
         if (Time.time > lastTimeAttacked + comboWindow)
             ComboCounter = 0;
         player.anim.SetInteger("ComboCounter", ComboCounter);
-        player.SetVelocity(player.attackmovement[ComboCounter].x * player.FacingDir, player.attackmovement[ComboCounter].y);
+
+        if (xInput == 0)
+            AttackDir = player.FacingDir;
+        else
+            AttackDir = (int)xInput;
+
+        player.SetVelocity(player.attackmovement[ComboCounter].x * AttackDir, player.attackmovement[ComboCounter].y);
         StateTimer = 0.1f;
+        player.StartCoroutine("BusyFor", 0.15f);
     }
 
     public override void Exit()
