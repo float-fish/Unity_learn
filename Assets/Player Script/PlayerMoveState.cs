@@ -24,7 +24,7 @@ public class PlayerMoveState : PlayerGroundState
 
         player.SetVelocity(xInput*player.MoveSpeed, rb.velocity.y);
 
-        if (xInput == 0 )
-            stateMachine.ChangeState(player.idleState);
+        if (xInput == 0)
+            stateMachine.ChangeState(player.idleState); 
     }
 }

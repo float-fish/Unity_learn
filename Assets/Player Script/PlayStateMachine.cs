@@ -13,7 +13,7 @@ public class PlayStateMachine
     }
 
     public void ChangeState(PlayerState new_state)
-    {
+    {   
         currentState.Exit();
         currentState = new_state;
         currentState.Enter();

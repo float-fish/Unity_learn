@@ -11,6 +11,7 @@ public class PlayerIdleState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
+        player.SetVelocity(0 , 0);
     }
 
     public override void Exit()
@@ -21,7 +22,7 @@ public class PlayerIdleState : PlayerGroundState
     public override void Update()
     {
         base.Update();
-        if ((xInput != 0 || rb.velocity.x != 0) && !player.isBusy)
-            stateMachine.ChangeState(player.moveState);
+        if ((xInput != 0 || Mathf.Abs(rb.velocity.x) > 1e-4f) && !player.isBusy)
+            stateMachine.ChangeState(player.moveState); 
     }
 }
